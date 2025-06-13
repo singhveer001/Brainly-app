@@ -8,43 +8,37 @@ import {Content, LinkModel} from "./models/content.server.model"
 import { userMiddleware } from "./middleware";
 import connectDB from "./db"
 import { random } from "./utils";
+import cors from 'cors';
 dotenv.config()
-const secretToken = process.env.SECRET_TOKEN as string 
-console.log("secrettoken",secretToken)
+
 const app = express()
 app.use(express.json())
+app.use(cors());
 connectDB();
+const secretToken = process.env.SECRET_TOKEN as string 
 
 app.post("/api/v1/signup", async (req, res) => {
     try {
-        console.log("helli")
         const {email, password} = req.body;
-
         const duplicateEntry  = await User.findOne({email})
-        console.log("no duplication")
         if(duplicateEntry){
             res.status(403).json({
                 msg : "User Already Exist"
             })
         }
         const hashedPass =await bcrypt.hash(password,10)
-        console.log("hashed password")
         const newUser = new User({
             email,
             password : hashedPass
         })
         await newUser.save()
-        console.log("New entry saved",newUser)
         const token = jwt.sign( {id : newUser._id}, secretToken , {expiresIn : "24h"})
-        console.log("tokennn",token)
-        console.log("response")
         res.status(200).json({
             data : "User Created Successfully",
             email : newUser.email,
             token
         })
     } catch (error : any) {
-        console.log("server")
             res.status(411).json({
             msg : "Internal Server Error",
             err : error.message
@@ -86,6 +80,8 @@ app.post("/api/v1/signin", async ( req, res )  => {
 app.post("/api/v1/content",userMiddleware,async ( req, res ) => {
     try {
         const {title,link,type,tags} = req.body
+        // @ts-ignore
+        console.log("userid got",req.userId)
         await Content.create({
             title,
             type,
@@ -140,7 +136,6 @@ app.delete("/api/v1/content", userMiddleware, async ( req, res ) => {
             msg : "Your Content Deleted Successfully"
         })
     } catch (error : any ) {
-        console.log("Delete Contnet Error")
         res.status(500).json({
             msg : "Error While Deleting Content",
             err : error.message
@@ -155,7 +150,6 @@ app.post("/api/v1/brain/share",userMiddleware, async ( req ,res ) => {
             //@ts-ignore
             userId : req.userId
         })
-        console.log("exsisihfiih",existingLink)
         if(existingLink){
             res.json({
                 hash : existingLink.hash
