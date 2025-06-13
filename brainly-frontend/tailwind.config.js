@@ -9,7 +9,7 @@ export default {
       colors : {
         gray : {
           100 : "eeeeef",
-          200 : "e6e9ed",
+          // 200 : "e6e9ed",
           600 : "95989c"
         },
         purple : {

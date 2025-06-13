@@ -1,17 +1,21 @@
-import { useState } from 'react'
 import './App.css'
-import { Button } from './components/Button'
-import { PlusIcon } from './icons/plusIcon'
-import { ShareIcon } from './icons/ShareIcon'
+import { Dashboard } from './pages/dashboard'
+import { Signin } from './pages/Signin'
+import { Signup } from './pages/Signup'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 function App() {
-  const [count, setCount] = useState(0)
 
-  return <div >
-      Brainly
-      <Button variant='primary' text="Add Content" startIcon={<PlusIcon/>}></Button>
-      <Button variant='secondary' text="Share brain" startIcon={<ShareIcon/>}></Button>
-  </div>
+  return <BrowserRouter> 
+      <Routes>
+        <Route path='/signup' element={ <Signup/>}></Route>
+        <Route path='/signin' element={ <Signin/>}></Route>
+        <Route path='/dashboard' element={ <Dashboard/>}></Route>
+      </Routes>
+  </BrowserRouter>
+  return <Signup/>
+  // <Dashboard />
+
 }
 
 export default App
