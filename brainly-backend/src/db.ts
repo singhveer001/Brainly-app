@@ -1,8 +1,10 @@
 import mongoose  from "mongoose";
+import dotenv from 'dotenv'
+dotenv.config()
 
 const connectDB = async function () {
    try {
-     await mongoose.connect("mongodb+srv://task:task@cluster0.oftrk.mongodb.net/",{dbName : "brain"})
+     await mongoose.connect(process.env.MONGODB_URI!);
      console.log("Mongodb Connected")
    } catch (error : any) {
     console.log(`Error : ${error.message}`)

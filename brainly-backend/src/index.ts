@@ -81,7 +81,6 @@ app.post("/api/v1/content",userMiddleware,async ( req, res ) => {
     try {
         const {title,link,type,tags} = req.body
         // @ts-ignore
-        console.log("userid got",req.userId)
         await Content.create({
             title,
             type,
@@ -106,7 +105,6 @@ app.get("/api/v1/content",userMiddleware, async ( req, res ) => {
     try {
         // @ts-ignore
         const userID = req.userId
-        console.log(userID)
         const content = await Content.find({userId : userID}).populate([
             {path : "userId",model :"User", select : 'email'},
             // {path : "tags",model :"Tags", select : 'title'}
@@ -120,7 +118,7 @@ app.get("/api/v1/content",userMiddleware, async ( req, res ) => {
             data : content
         })
     }catch (error : any) {
-        console.log("getConent Error")
+        console.log("getContent Error")
         res.status(500).json({
             msg : "Error Whhile Getting Data",
             err : error.message
