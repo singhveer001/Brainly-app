@@ -20,9 +20,7 @@ export function CreateContentModal ({open, onClose}) {
     async function addContent (){
         const title = titleRef.current?.value
         const link = linkRef.current?.value
-        console.log("ghfhgjhkj",link)
-        console.log("ghfhgjhkj",title)
-        console.log("tokkekekek",localStorage.getItem("token"))
+
         await axios.post(`${BACKEND_URL}/api/v1/content`,{
             title,
             link,
@@ -53,8 +51,8 @@ export function CreateContentModal ({open, onClose}) {
                             <Input ref={linkRef} placeholder={"link"}/>
                         </div>
                         <div>
-                            <h1>Type</h1>
-                            <div className="flex gap-2 justify-center pb-2">
+                            <h1 className="text-center mb-2 font-bold text-purple-600">Type</h1>
+                            <div className="flex gap-3 justify-center pb-2">
                                 <Button text={"Youtube"} variant={type === ContentType.Youtube ? "primary" : "secondary"} onClick={ () => {
                                     setType(ContentType.Youtube)
                                 }}></Button>

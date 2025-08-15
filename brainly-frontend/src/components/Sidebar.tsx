@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { Logo } from "../icons/Logo";
 import { TwitterIcon } from "../icons/TwitterIcon";
 import { YoutubeIcon } from "../icons/YoutubeIcon";
@@ -8,8 +9,9 @@ interface sidebarProps {
 }
 
 export function Sidebar ({setSelectedType}: sidebarProps) {
+    const navigate = useNavigate();
     return <div className="h-screen bg-white border-r w-72 fixed left-0 top-0 pl-6">
-        <div className="flex text-2xl pt-4 items-center ">
+        <div onClick={() => navigate('/')} className="flex text-2xl pt-4 items-center cursor-pointer ">
             <div className=" pr-2 text-purple-800">
                 <Logo/>
             </div>

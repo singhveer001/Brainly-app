@@ -1,5 +1,5 @@
 import { Button } from '../components/Button'
-import { PlusIcon } from '../icons/plusIcon'
+import { PlusIcon } from '../icons/PlusIcon'
 import { ShareIcon } from '../icons/ShareIcon'
 import { Card } from '../components/Card'
 import { CreateContentModal } from '../components/CreateContentModal'
@@ -15,7 +15,7 @@ export function Dashboard() {
   const [selectedType, setSelectedType] = useState<any>("all");
   
   const filteredContents = contents.filter( content =>
-            selectedType === "all" || content.type === selectedType
+            selectedType === "all" || content.type?.toLowerCase().trim() === selectedType
     );
 
   return <div >

@@ -33,6 +33,10 @@ export function Signin (){
             <div className="flex justify-center pt-4">
                 <Button onClick={signin} loading={false} variant="primary" text="Signin" fullWidth={true} />
             </div>
+
+            <div className="mt-3 px-4 text-sm text-center font-normal">
+                Don't have an account, please <a className="underline font-semibold" href="/signup">Signup</a>
+            </div>
         </div>
     </div>
 }

@@ -12,7 +12,6 @@ export function useContent (){
             }
         })
             .then((response) => {
-                console.log(response.data.data)
                 setContents(response.data.data)
             })
     }
