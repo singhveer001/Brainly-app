@@ -15,7 +15,7 @@ export function Dashboard() {
   const [selectedType, setSelectedType] = useState<any>("all");
   
   const filteredContents = contents.filter( content =>
-            selectedType === "all" || content.type?.toLowerCase().trim() === selectedType
+            selectedType === "all" || content.type?.toLowerCase().trim() === selectedType.toLowerCase().trim()
     );
 
   return <div >
@@ -42,11 +42,15 @@ export function Dashboard() {
           }} variant='secondary' text="Share brain" startIcon={<ShareIcon/>}></Button>
         </div>
         <div className='flex gap-4 flex-wrap'>
-           { filteredContents.map(({ type, link, title }) => <Card 
+           { filteredContents.length  > 0 ? filteredContents.map(({ type, link, title, _id }) => <Card 
+                    key={_id}
                     type={type} 
                     link={link} 
                     title={title} 
-                />)
+                />) : 
+                (
+                  <p className='text-gray-600'>No Content Available</p>
+                )
             }
           {/* <Card type="youtube" link="https://www.youtube.com/watch?v=ngd1t84gk48" title="Future"/> */}
         </div>
