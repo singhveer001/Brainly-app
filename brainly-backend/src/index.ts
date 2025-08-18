@@ -101,6 +101,30 @@ app.post("/api/v1/content",userMiddleware,async ( req, res ) => {
     }
 })
 
+app.put("/api/v1/content/:id",userMiddleware,async ( req, res ) => {
+    try {
+        const {title,link,type,tags} = req.body
+        const contentId = req.params.id
+        await Content.findByIdAndUpdate({_id : contentId},{
+            title,
+            type,
+            link,
+            // @ts-ignore
+            userId : req.userId,
+            tags 
+        })
+        res.status(200).json({
+            msg : "Content Updated Successfully"
+        })
+    } catch (error: any) {
+        console.log("contentUpdation Error")
+        res.status(500).json({
+            msg : "Content Updation error",
+            err : error.message
+        })
+    }
+})
+
 app.get("/api/v1/content",userMiddleware, async ( req, res ) => {
     try {
         // @ts-ignore
