@@ -1,10 +1,11 @@
 interface inputRef {
     placeholder : string; 
-    ref ?: any;
+    onChange ?: any;
+    value: string
 }
 
-export function Input( {ref, placeholder}: inputRef) {
+export function Input( {onChange, placeholder, value}: inputRef) {
         return <div>
-            <input ref={ref} placeholder={placeholder} type="text" className="px-4 py-2 border rounded m-2" ></input>
+            <input value={value} onChange={onChange} placeholder={placeholder} type="text" className="px-4 py-2 border rounded m-2" ></input>
         </div>
 }

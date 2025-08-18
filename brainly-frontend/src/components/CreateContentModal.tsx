@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CrossIcon } from "../icons/CrossIcon";
 import { Button } from "./Button";
 import {Input} from "./Input"
@@ -11,25 +11,55 @@ enum ContentType {
     Twitter = "twitter"
 }
 
-export function CreateContentModal ({open, onClose}) {
+export function CreateContentModal ({open, onClose, initialData} : {
+    open: boolean;
+    onClose: () => void;
+    initialData : {
+        _id: string,
+        title: string,
+        link: string,
+        type: "youtube" | "twitter"
+    } | null;
+}) {
 
-    const titleRef = useRef<HTMLInputElement>();
-    const linkRef = useRef<HTMLInputElement>();
+    const [title, setTitle] = useState("")
+    const [linkValue, setLinkValue] = useState("")
     const [type,setType] = useState(ContentType.Youtube)
 
-    async function addContent (){
-        const title = titleRef.current?.value
-        const link = linkRef.current?.value
+    useEffect(() => {
+        if(initialData){
+            setTitle(initialData?.title || "")
+            setLinkValue(initialData?.link || "")
+            setType(initialData?.type as ContentType || ContentType.Youtube)
+        }else{
+            setTitle("");
+            setLinkValue("");
+            setType(ContentType.Youtube)
+        }
+    },[initialData,open])
 
-        await axios.post(`${BACKEND_URL}/api/v1/content`,{
-            title,
-            link,
-            type
-        },{
-            headers : {
-                "Authorization" : `Bearer ${localStorage.getItem("token")}`
-            }
-        })
+    async function addContent (){
+        if(initialData?._id){
+            await axios.put(`${BACKEND_URL}/api/v1/content/${initialData._id}`,{
+                title,
+                link: linkValue,
+                type
+            },{
+                headers: {
+                    "Authorization" : `Bearer ${localStorage.getItem("token")}`
+                }
+            })
+        }else{
+            await axios.post(`${BACKEND_URL}/api/v1/content`,{
+                title,
+                link: linkValue,
+                type
+            },{
+                headers : {
+                    "Authorization" : `Bearer ${localStorage.getItem("token")}`
+                }
+            })
+        }
         onClose();
     }
 
@@ -47,8 +77,8 @@ export function CreateContentModal ({open, onClose}) {
                             </div>
                         </div>
                         <div>
-                            <Input ref={titleRef} placeholder={"title"}/>
-                            <Input ref={linkRef} placeholder={"link"}/>
+                            <Input value={title} onChange={(e:any) => setTitle(e.target.value)} placeholder={"title"}/>
+                            <Input value={linkValue} onChange={(e: any) => setLinkValue(e.target.value)} placeholder={"link"}/>
                         </div>
                         <div>
                             <h1 className="text-center mb-2 font-bold text-purple-600">Type</h1>
@@ -62,7 +92,7 @@ export function CreateContentModal ({open, onClose}) {
                             </div>
                         </div>
                         <div className="flex justify-center">
-                            <Button onClick={addContent} variant="primary" text={"Submit"} />
+                            <Button onClick={addContent} variant="primary" text={initialData ? "Update" : "Submit"} />
                         </div>
                     </span>
                 </div>

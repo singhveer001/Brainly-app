@@ -3,6 +3,7 @@ import { Logo } from "../icons/Logo";
 import { TwitterIcon } from "../icons/TwitterIcon";
 import { YoutubeIcon } from "../icons/YoutubeIcon";
 import { SidebarItem } from "./SidebarItem";
+import { Group } from "../icons/Group";
 
 interface sidebarProps {
     setSelectedType : (type : "all" | "youtube" | "twitter") => void;
@@ -20,6 +21,7 @@ export function Sidebar ({setSelectedType}: sidebarProps) {
         <div className="pt-4 pl-4">
             <SidebarItem onClick={() => setSelectedType("twitter")}  text="Twitter" icon={<TwitterIcon/>} />
             <SidebarItem onClick={() => setSelectedType("youtube")} text="Youtube" icon={<YoutubeIcon/>} />
+            <SidebarItem onClick={() => setSelectedType("all")} text="All" icon={<Group/>} />
         </div>
     </div>
 }

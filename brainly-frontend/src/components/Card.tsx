@@ -1,15 +1,19 @@
 import { useEffect } from "react";
-import { ShareIcon } from "../icons/ShareIcon";
 import { TwitterIcon } from "../icons/TwitterIcon";
 import { YoutubeIcon } from "../icons/YoutubeIcon";
+import { EditIcon } from "../icons/EditIcon";
+import { CrossIcon } from "../icons/CrossIcon";
 
-interface CardProps {
+export interface CardProps {
+    _id : string;
     title : string;
     link : string;
     type : "youtube" | "twitter";
+    onEdit : (id: string, title: string, link: string, type: "youtube" | "twitter") => void;
+    onDelete : (id: string) => void
 }
 
-export function Card ({title, link, type} : CardProps) {
+export function Card ({title, link, type, onEdit, _id, onDelete} : CardProps) {
     useEffect(() => {
         //@ts-ignore
         if (type === "twitter" && window.twttr?.widgets?.load) {
@@ -29,12 +33,16 @@ export function Card ({title, link, type} : CardProps) {
                     </div>
                     {title}
                 </div>
-                <div className="flex items-center">
-                    <div className="pr-2 text-gray-500">
-                        <ShareIcon/>
+                <div className="flex items-center gap-2">
+                    <div className="text-gray-500 cursor-pointer" 
+                         onClick={ () => onEdit(_id, title, link, type) }
+                    >
+                        <EditIcon/>
                     </div>
-                    <div className="text-gray-500">
-                        <ShareIcon/>
+                    <div className="pr-2 text-gray-500 cursor-pointer" 
+                         onClick={() => onDelete(_id)}    
+                    >
+                        <CrossIcon/>
                     </div>
                 </div>
             </div>
