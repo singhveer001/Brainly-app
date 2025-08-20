@@ -1,9 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { CrossIcon } from "../icons/CrossIcon";
 import { Button } from "./Button";
 import {Input} from "./Input"
 import { BACKEND_URL } from "../config";
 import axios from 'axios';
+import { usePopup } from "../hooks/popupContext";
 // Controlled component
 
 enum ContentType {
@@ -15,7 +16,7 @@ export function CreateContentModal ({open, onClose, initialData} : {
     open: boolean;
     onClose: () => void;
     initialData : {
-        _id: string,
+        _id?: string,
         title: string,
         link: string,
         type: "youtube" | "twitter"
@@ -25,6 +26,7 @@ export function CreateContentModal ({open, onClose, initialData} : {
     const [title, setTitle] = useState("")
     const [linkValue, setLinkValue] = useState("")
     const [type,setType] = useState(ContentType.Youtube)
+    const {showPopup} = usePopup();
 
     useEffect(() => {
         if(initialData){
@@ -40,7 +42,7 @@ export function CreateContentModal ({open, onClose, initialData} : {
 
     async function addContent (){
         if(initialData?._id){
-            await axios.put(`${BACKEND_URL}/api/v1/content/${initialData._id}`,{
+            const response = await axios.put(`${BACKEND_URL}/api/v1/content/${initialData._id}`,{
                 title,
                 link: linkValue,
                 type
@@ -49,8 +51,9 @@ export function CreateContentModal ({open, onClose, initialData} : {
                     "Authorization" : `Bearer ${localStorage.getItem("token")}`
                 }
             })
+            showPopup(response.data.msg)
         }else{
-            await axios.post(`${BACKEND_URL}/api/v1/content`,{
+            const response = await axios.post(`${BACKEND_URL}/api/v1/content`,{
                 title,
                 link: linkValue,
                 type
@@ -59,6 +62,7 @@ export function CreateContentModal ({open, onClose, initialData} : {
                     "Authorization" : `Bearer ${localStorage.getItem("token")}`
                 }
             })
+            showPopup(response.data.msg)
         }
         onClose();
     }
@@ -68,7 +72,7 @@ export function CreateContentModal ({open, onClose, initialData} : {
             <div className="w-screen  h-screen bg-slate-500 fixed top-0 left-0 opacity-60 flex justify-center">
 
             </div>
-            <div className="w-screen  h-screen fixed TOP-0 left-0 flex justify-center">
+            <div className="w-screen  h-screen fixed top-0 left-0 flex justify-center">
                 <div className="flex flex-col justify-center ">
                     <span className="bg-white opacity-100 p-4 rounded-md fixed">
                         <div className="flex justify-end ">

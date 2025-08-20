@@ -1,13 +1,14 @@
 import { Button } from '../components/Button'
 import { PlusIcon } from '../icons/PlusIcon'
 import { ShareIcon } from '../icons/ShareIcon'
-import { Card } from '../components/Card'
+import { Card, type CardProps } from '../components/Card'
 import { CreateContentModal } from '../components/CreateContentModal'
 import { useEffect, useState } from 'react'
 import { Sidebar } from '../components/Sidebar'
 import { useContent } from '../hooks/useContent'
 import { BACKEND_URL } from '../config'
 import axios from 'axios'
+import { usePopup } from '../hooks/popupContext'
 
 export function Dashboard() {
   const [modalOpen, setModalOpen] = useState(false);
@@ -15,6 +16,7 @@ export function Dashboard() {
   const [selectedType, setSelectedType] = useState<any>("all");
   const [editContent, setEditContent] = useState<any>(null);
   const [localContents, setLocalContents] = useState(contents);
+  const {showPopup} = usePopup();
 
   useEffect(() => {
     setLocalContents(contents)
@@ -33,7 +35,7 @@ export function Dashboard() {
     const confirmDelete = window.confirm("Are you sure you want to delete this content?")
     if(!confirmDelete) return ;
     try {
-      await axios.delete(`${BACKEND_URL}/api/v1/content`,{
+      const response = await axios.delete(`${BACKEND_URL}/api/v1/content`,{
         data: {
           contentId : id
         },
@@ -43,9 +45,10 @@ export function Dashboard() {
       })
       //@ts-ignore
       setLocalContents(prev => prev.filter(c => c._id !== id))
+      showPopup(response.data.msg)
     } catch (error) {
       console.log("Failed to delete content",error)
-      alert("Error deleting content")
+      showPopup("Error deleting content")
     }
   }
 
@@ -75,7 +78,7 @@ export function Dashboard() {
                 }) 
                 const shareUrl = `http://localhost:5173/share/${response.data.hash}`;
                 await navigator.clipboard.writeText(shareUrl); 
-                alert("Link copied to clipboard!");
+                showPopup("Link copied to clipboard!");
           }} variant='secondary' text="Share brain" startIcon={<ShareIcon/>}></Button>
         </div>
         <div className='flex gap-4 flex-wrap'>
